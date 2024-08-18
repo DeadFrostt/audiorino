@@ -33,34 +33,34 @@ void loop(){
         Serial.println("Counterclockwise");
         myStepper.step(-200);
         break;
-      case 0xFF6897:
+      case 0x898FDF7A :
         updateSoundLevel(0);
         break;
-      case 0xFF30CF: 
+      case 0x6BC6597B: 
         updateSoundLevel(10);
         break;
-      case 0xFF18E7:
+      case 0x735B797E:
         updateSoundLevel(20);
         break;
-      case 0xFF7A85:
+      case 0x1EC81DBF:
         updateSoundLevel(30);
         break;
-      case 0xFF10EF:
+      case 0x450753D6:
         updateSoundLevel(40);
         break;
-      case 0xFF38C7:
+      case 0xBA0F4EDF:
         updateSoundLevel(50);
         break;
-      case 0xFF5AA5:
+      case 0x4AC4DA9A:
         updateSoundLevel(60);
         break;
-      case 0xFF42BD:
+      case 0xF6317EDB:
         updateSoundLevel(70);
         break;
-      case 0xFF4AB5:
+      case 0xF9000E7E:
         updateSoundLevel(80);
         break;
-      case 0xFF52AD: 
+      case 0xC7291B77: 
         updateSoundLevel(90);
         break;
       default:
