@@ -74,9 +74,11 @@ void loop(){
 
 void updateSoundLevel(int targetLevel) {
   int stepDifference = targetLevel - currentSoundLevel;
-  int stepsToMove = stepDifference * 200; 
+  int stepsToMove = stepDifference * 200;
   myStepper.step(stepsToMove);
   currentSoundLevel = targetLevel;
+
+  //display the current sound level in the console
   Serial.print("Sound Level: ");
   Serial.println(currentSoundLevel);
 }
