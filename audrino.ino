@@ -67,8 +67,8 @@ void loop(){
         Serial.println("Unknown command");
         break;
     }
-    key_value = results.value; // Store the last received IR value
-    irrecv.resume(); // Ready to receive the next signal
+    key_value = results.value; //store the last received IR value
+    irrecv.resume(); //ready to receive the next signal
   }
 }
 
