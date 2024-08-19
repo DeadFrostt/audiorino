@@ -7,7 +7,7 @@
 #define DHT11PIN 8 //DHT11 sensor connected to pin 8
 dht DHT11; //declares DHT as DHT11
 
-uRTCLib rtc(0x68); //RTC module
+uRTCLib rtc(0x68); //rTC module
 
 const int RECV_PIN = 7; //IR receiver pin
 IRrecv irrecv(RECV_PIN);
@@ -23,20 +23,20 @@ const int rs = 12, en = 11, d4 = 5, d5 = 4, d6 = 3, d7 = 2; //LCD pins
 LiquidCrystal lcd(rs, en, d4, d5, d6, d7); //initializes LCD
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(9600); // Starts the serial monitor
   delay(300);
   URTCLIB_WIRE.begin();
   rtc.set(45, 23, 18, 5, 13, 1, 22);
   irrecv.enableIRIn();
-  irrecv.blink13(true);
+  irrecv.blink13(true); 
   myStepper.setSpeed(10); 
-  lcd.begin(16, 2); 
+  lcd.begin(16, 2); // Initializes LCD display
 }
 
 void loop() {
   if (irrecv.decode(&results)) {
     if (results.value == 0XFFFFFFFF) {
-      results.value = key_value; // Handles repeat codes
+      results.value = key_value;
     }
 
     switch (results.value) {
@@ -98,11 +98,9 @@ void updateSoundLevel(int targetLevel) {
   int stepsToMove = stepDifference * 15;
   myStepper.step(stepsToMove);
   currentSoundLevel = targetLevel;
-
-  //display the current sound level in the console
   Serial.print("Sound Level: ");
   Serial.println(currentSoundLevel);
-  displaySoundLevel();
+  displaySoundLevel(); //display the updated sound level
 }
 
 void displaySoundLevel() {
@@ -116,27 +114,54 @@ void displaySoundLevel() {
 void displayTempAndTime() {
   int chk = DHT11.read11(DHT11PIN); //reads data from the DHT11 sensor
   
+  float temperatureF = (((float)DHT11.temperature) * 9 / 5) + 32;
+  int humidity = DHT11.humidity;
+
+  rtc.refresh();
+  int hour = rtc.hour();
+  int minute = rtc.minute();
+  int second = rtc.second();
+
+  // Display on LCD
   lcd.clear();
-  lcd.setCursor(6, 0); //sets cursor to the first line
+  lcd.setCursor(6, 0);
   lcd.print("Hum.:");
-  lcd.print((float)DHT11.humidity, 0); //prints humidity with 2 decimal places
+  lcd.print(humidity, 0);
   lcd.print("%");
 
-  lcd.setCursor(0, 0); //sets cursor to the second line
-  lcd.print(((((float)DHT11.temperature)*9/5)+32), 0); //prints temperature in Fahrenheit
+  lcd.setCursor(0, 0);
+  lcd.print(temperatureF, 0);
   lcd.write(223);
   lcd.print("F");
 
-  rtc.refresh();
   lcd.setCursor(0, 1);
-  if(rtc.hour() < 10) lcd.print("0");
-  lcd.print(rtc.hour());
+  if(hour < 10) lcd.print("0");
+  lcd.print(hour);
   lcd.print(":");
   
-  if(rtc.minute() < 10) lcd.print("0");
-  lcd.print(rtc.minute());
+  if(minute < 10) lcd.print("0");
+  lcd.print(minute);
   lcd.print(":");
   
-  if(rtc.second() < 10) lcd.print("0");
-  lcd.print(rtc.second());
+  if(second < 10) lcd.print("0");
+  lcd.print(second);
+
+  // Print to Serial Monitor
+  Serial.print("Temperature: ");
+  Serial.print(temperatureF, 0);
+  Serial.println("F");
+
+  Serial.print("Humidity: ");
+  Serial.print(humidity, 0);
+  Serial.println("%");
+
+  Serial.print("Time: ");
+  if(hour < 10) Serial.print("0");
+  Serial.print(hour);
+  Serial.print(":");
+  if(minute < 10) Serial.print("0");
+  Serial.print(minute);
+  Serial.print(":");
+  if(second < 10) Serial.print("0");
+  Serial.println(second);
 }
